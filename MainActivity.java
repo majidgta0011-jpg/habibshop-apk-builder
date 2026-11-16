@@ -9,6 +9,7 @@ import android.webkit.WebView;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 import android.webkit.WebChromeClient;
+import android.webkit.ValueCallback;
 
 public class MainActivity extends Activity {
     private WebView webView;
@@ -44,14 +45,24 @@ public class MainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        webView.evaluateJavascript(
-            "(function(){ if(typeof handleAndroidBack==='function') return handleAndroidBack(); return false; })()",
-            value -> {
-                if (!"true".equals(value)) {
-                    if (webView.canGoBack()) webView.goBack();
-                    else MainActivity.super.onBackPressed();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            webView.evaluateJavascript(
+                "(function(){ if(typeof handleAndroidBack==='function') return handleAndroidBack(); return false; })()",
+                new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        if (!"true".equals(value)) {
+                            if (webView.canGoBack()) {
+                                webView.goBack();
+                            } else {
+                                MainActivity.super.onBackPressed();
+                            }
+                        }
+                    }
                 }
-            }
-        );
+            );
+        } else {
+            super.onBackPressed();
+        }
     }
 }
