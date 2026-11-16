@@ -1,4 +1,4 @@
-name: Build Mojoodi Habib Signed Android APK
+name: Build Mojoodi Habib Native Android APK
 
 on:
   workflow_dispatch:
@@ -10,49 +10,52 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Set up Flutter 3.24.3
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.24.3'
-          channel: 'stable'
-          cache: true
-
-      - name: Download Vazirmatn Persian Font into assets
+      - name: Compile and Sign Native Android APK in 30 Seconds
         run: |
-          mkdir -p assets
-          curl -L "https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/ttf/Vazirmatn-Regular.ttf" -o assets/Vazirmatn-Regular.ttf
-          curl -L "https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/ttf/Vazirmatn-Bold.ttf" -o assets/Vazirmatn-Bold.ttf
+          set -e
+          BUILD_TOOLS=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -n 1)
+          PLATFORM=$(ls -d $ANDROID_HOME/platforms/android-* | sort -V | tail -n 1)
+          ANDROID_JAR="$PLATFORM/android.jar"
+          echo "Using Build-Tools: $BUILD_TOOLS"
+          echo "Using Platform: $ANDROID_JAR"
 
-      - name: Install Python and Flet CLI Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install "flet[all]==0.24.1" requests==2.32.3
+          mkdir -p src/ir/habibshop/inventory obj dex assets res/values output_apk
 
-      - name: Build Signed Android APK with Flet
-        run: |
-          flet --version
-          flet build apk --project mojoodi_habib --product "Mojoodi Habib" --org ir.habibshop.inventory --build-version 4.0.0 --build-number 4 --verbose || flet build apk --verbose
+          # دانلود فونت وزیرمتن داخل پوشه assets فایل APK
+          curl -sL "https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/ttf/Vazirmatn-Regular.ttf" -o assets/Vazirmatn-Regular.ttf
+          curl -sL "https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/ttf/Vazirmatn-Bold.ttf" -o assets/Vazirmatn-Bold.ttf
 
-      - name: Verify and Prepare Signed APK Output
-        run: |
-          mkdir -p output_apk
-          APK_PATH=$(find build/apk -name "*.apk" | head -n 1)
-          if [ -z "$APK_PATH" ]; then
-            echo "APK not found in build/apk!"
-            exit 1
-          fi
-          cp "$APK_PATH" output_apk/HabibShop-Manager.apk
+          cp MainActivity.java src/ir/habibshop/inventory/MainActivity.java
+          cp app_index.html assets/index.html
+
+          cat << 'EOF' > res/values/strings.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <string name="app_name">موجودی‌های سایت حبیب</string>
+          </resources>
+          EOF
+
+          # ۱. کامپایل کد جاوا اندروید
+          javac -encoding UTF-8 -source 1.8 -target 1.8 -bootclasspath "$ANDROID_JAR" -classpath "$ANDROID_JAR" -d obj src/ir/habibshop/inventory/MainActivity.java
+
+          # ۲. تبدیل به بایت‌کد اندروید (classes.dex)
+          "$BUILD_TOOLS/d8" --lib "$ANDROID_JAR" --output dex obj/ir/habibshop/inventory/*.class
+
+          # ۳. بسته‌بندی منابع، مانیفست و فایل‌های اپلیکیشن
+          "$BUILD_TOOLS/aapt" package -f -M AndroidManifest.xml -S res -A assets -I "$ANDROID_JAR" -F unaligned.apk
+          cp dex/classes.dex .
+          "$BUILD_TOOLS/aapt" add unaligned.apk classes.dex
+
+          # ۴. تراز کردن و امضای دیجیتال استاندارد اندروید (V1 + V2 + V3)
+          "$BUILD_TOOLS/zipalign" -f 4 unaligned.apk aligned.apk
+          keytool -genkeypair -v -keystore habib.keystore -alias habibkey -keyalg RSA -keysize 2048 -validity 10000 -storepass 123456 -keypass 123456 -dname "CN=HabibShop, OU=IT, O=Habib, L=Tehran, S=Tehran, C=IR"
+          "$BUILD_TOOLS/apksigner" sign --ks habib.keystore --ks-pass pass:123456 --key-pass pass:123456 --out output_apk/HabibShop-Manager.apk aligned.apk
           ls -lh output_apk/HabibShop-Manager.apk
 
       - name: Upload HabibShop-Manager APK Artifact
