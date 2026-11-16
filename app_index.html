@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>موجودی‌های سایت حبیب</title>
+<style>
+  @font-face {
+    font-family: 'Vazirmatn';
+    src: url('Vazirmatn-Regular.ttf') format('truetype');
+    font-weight: normal;
+  }
+  @font-face {
+    font-family: 'Vazirmatn';
+    src: url('Vazirmatn-Bold.ttf') format('truetype');
+    font-weight: bold;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
+  html, body { width: 100%; height: 100%; background: #f1f5f9; color: #0f172a; overflow: hidden; }
+  .app-shell { display: flex; flex-direction: column; width: 100%; height: 100%; max-width: 600px; margin: 0 auto; position: relative; }
+  .app-header { background: #0f766e; color: #fff; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+  .app-title { font-size: 14px; font-weight: bold; }
+  .pill-btn { padding: 4px 8px; border-radius: 8px; font-size: 10px; font-weight: bold; border: none; cursor: pointer; }
+  .lock-open { background: #dcfce7; color: #15803d; }
+  .lock-closed { background: #fee2e2; color: #dc2626; }
+  .admin-sel { background: #fff; color: #0f172a; border: none; border-radius: 8px; padding: 4px 6px; font-size: 11px; font-weight: bold; max-width: 120px; }
+  .main-body { flex: 1; overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 8px; }
+  .top-4tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; background: #fff; padding: 5px; border-radius: 12px; border: 1px solid #e2e8f0; }
+  .t-tab { text-align: center; padding: 6px 2px; border-radius: 9px; font-size: 10px; font-weight: bold; cursor: pointer; background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; }
+  .t-tab.act-oos { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
+  .t-tab.act-nis { background: #e2e8f0; color: #0f172a; border-color: #94a3b8; }
+  .t-tab.act-low { background: #fef3c7; color: #b45309; border-color: #fde68a; }
+  .t-tab.act-in  { background: #dcfce7; color: #15803d; border-color: #86efac; }
+  .warn-banner { background: #fef3c7; border: 1.5px solid #f59e0b; border-radius: 10px; padding: 7px 10px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: bold; color: #b45309; }
+  .filter-card { background: #fff; padding: 8px; border-radius: 12px; border: 1px solid #e2e8f0; }
+  .search-row { display: flex; gap: 6px; margin-bottom: 7px; }
+  .inp { flex: 1; padding: 7px 10px; border-radius: 9px; border: 1px solid #cbd5e1; font-size: 12px; background: #f8fafc; width: 100%; }
+  .capsule-row { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 3px; }
+  .cat-pill { white-space: nowrap; padding: 4px 11px; border-radius: 20px; font-size: 11px; font-weight: bold; background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; cursor: pointer; }
+  .cat-pill.active { background: #0f766e; color: #fff; border-color: #0f766e; }
+  .cards-list { display: flex; flex-direction: column; gap: 8px; padding-bottom: 20px; }
+  .prod-card { background: #fff; border-radius: 15px; padding: 9px; display: flex; align-items: center; gap: 9px; border: 1px solid #e2e8f0; }
+  .prod-thumb { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; flex-shrink: 0; background: #f8fafc; border: 1.5px solid #cbd5e1; }
+  .prod-info { flex: 1; min-width: 0; }
+  .prod-name { font-size: 12px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
+  .prod-meta { font-size: 10px; color: #64748b; margin-bottom: 4px; }
+  .st-badge { font-size: 10px; padding: 2px 6px; border-radius: 6px; font-weight: bold; }
+  .b-oos { background: #fee2e2; color: #dc2626; }
+  .b-nis { background: #e2e8f0; color: #334155; }
+  .b-low { background: #fef3c7; color: #b45309; }
+  .b-in  { background: #dcfce7; color: #15803d; }
+  .prod-price { font-size: 12px; font-weight: bold; color: #0f766e; margin-right: 6px; }
+  .btn-main { background: #0f766e; color: #fff; border: none; border-radius: 9px; padding: 6px 10px; font-size: 11px; font-weight: bold; cursor: pointer; }
+  .btn-sub { background: #f8fafc; color: #334155; border: 1px solid #cbd5e1; border-radius: 9px; padding: 4px 10px; font-size: 10px; font-weight: bold; cursor: pointer; }
+  .bottom-nav { background: #fff; border-top: 1px solid #e2e8f0; padding: 6px 8px; display: flex; justify-content: space-around; }
+  .nav-btn { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #64748b; padding: 5px 14px; border-radius: 12px; cursor: pointer; }
+  .nav-btn.active { background: #ccfbf1; color: #0f766e; font-weight: bold; }
+  .full-ed { position: absolute; inset: 0; background: #fff; z-index: 40; display: none; flex-direction: column; }
+  .full-ed.open { display: flex; }
+  .ed-top { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; }
+  .ed-body { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+  .mode-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .m3-b { padding: 8px 4px; border-radius: 9px; font-size: 11px; font-weight: bold; border: 1px solid #cbd5e1; background: #f1f5f9; cursor: pointer; }
+  .m3-b.active { background: #0f766e; color: #fff; border-color: #0f766e; }
+  .dlg-bg { position: absolute; inset: 0; background: rgba(15,23,42,0.7); z-index: 60; display: none; align-items: center; justify-content: center; padding: 14px; }
+  .dlg-bg.open { display: flex; }
+  .dlg-box { width: 100%; max-height: 90%; overflow-y: auto; background: #fff; border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+  .toast { position: absolute; bottom: 65px; left: 16px; right: 16px; background: #0f766e; color: #fff; padding: 10px; border-radius: 10px; font-size: 12px; font-weight: bold; text-align: center; z-index: 90; display: none; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <div class="app-header">
+    <div style="display:flex; align-items:center; gap:6px;">
+      <span class="app-title">🛒 موجودی‌های سایت حبیب</span>
+      <button class="pill-btn lock-open" id="lockBtn" onclick="toggleLock()">🔓 باز</button>
+    </div>
+    <div style="display:flex; align-items:center; gap:5px;">
+      <select class="admin-sel" id="adminSel" onchange="changeAdmin(this.value)"></select>
+      <button class="pill-btn" style="background:#fef3c7; color:#b45309;" id="modeBtn" onclick="toggleMode()">🧪 آزمایشی</button>
+    </div>
+  </div>
+
+  <!-- تب ۱: کالاها -->
+  <div class="main-body" id="pInv">
+    <div class="top-4tabs">
+      <div class="t-tab act-oos" id="t-oos" onclick="setTab('oos')">🚨 ناموجودها<br><span id="c-oos">(0)</span></div>
+      <div class="t-tab" id="t-nis" onclick="setTab('nis')">🚫 موجود نیست<br><span id="c-nis">(0)</span></div>
+      <div class="t-tab" id="t-low" onclick="setTab('low')">⚠️ رو به اتمام<br><span id="c-low">(0)</span></div>
+      <div class="t-tab" id="t-in" onclick="setTab('in')">✅ موجودها<br><span id="c-in">(0)</span></div>
+    </div>
+    <div class="warn-banner" id="warnBox" style="display:none;">
+      <span id="warnTxt">⚠️ هشدار نقص کالا</span>
+      <button class="btn-main" style="background:#d97706; padding:4px 8px;" onclick="setTab('warn')">مشاهده</button>
+    </div>
+    <div class="filter-card">
+      <div class="search-row">
+        <input type="text" class="inp" id="qInp" placeholder="🔍 جستجوی نام کالا یا بارکد..." oninput="renderList()">
+      </div>
+      <div class="capsule-row" id="catRow"></div>
+    </div>
+    <div class="cards-list" id="cardsBox"></div>
+  </div>
+
+  <!-- تب ۲: لاگ ادمین‌ها -->
+  <div class="main-body" id="pLogs" style="display:none;">
+    <div class="filter-card" style="display:flex; gap:6px; align-items:center;">
+      <span style="font-size:12px; font-weight:bold;">👤 فیلتر ادمین:</span>
+      <select class="inp" id="logAdmSel" onchange="renderLogs()"></select>
+    </div>
+    <div class="cards-list" id="logsBox"></div>
+  </div>
+
+  <!-- تب ۳: تنظیمات سایت -->
+  <div class="main-body" id="pSet" style="display:none;">
+    <div class="filter-card" style="display:flex; flex-direction:column; gap:8px;">
+      <b style="font-size:13px; color:#0f766e;">👤 افزودن نام ادمین جدید</b>
+      <div style="display:flex; gap:6px;">
+        <input type="text" class="inp" id="newAdmInp" placeholder="نام ادمین (مثلاً: علی - انباردار)">
+        <button class="btn-main" onclick="addAdmin()">➕ ثبت</button>
+      </div>
+    </div>
+    <div class="filter-card" style="display:flex; flex-direction:column; gap:8px; border:1.5px solid #0f766e;">
+      <b style="font-size:13px; color:#0f766e;">🌐 اتصال مستقیم به سایت ووکامرس حبیب</b>
+      <input type="text" class="inp" id="sUrl" placeholder="آدرس سایت (https://habibshop.ir)">
+      <button class="btn-main" style="background:#0284c7; padding:10px;" onclick="fetchStoreApi()">📸 استخراج فوری کالاها و عکس‌ها از سایت حبیب</button>
+      <input type="text" class="inp" id="sCk" placeholder="Consumer Key (ck_...)">
+      <input type="password" class="inp" id="sCs" placeholder="Consumer Secret (cs_...)">
+      <button class="btn-main" style="padding:10px;" onclick="connectLiveWc()">🔌 ذخیره و اتصال زنده دوطرفه به سایت</button>
+    </div>
+  </div>
+
+  <div class="bottom-nav" id="bNav">
+    <div class="nav-btn active" id="nb0" onclick="goNav(0)"><span>📦</span><span>موجودی و کالاها</span></div>
+    <div class="nav-btn" id="nb1" onclick="goNav(1)"><span>👤</span><span id="nbLog">لاگ ادمین‌ها</span></div>
+    <div class="nav-btn" id="nb2" onclick="goNav(2)"><span>⚙️</span><span>اتصال سایت</span></div>
+  </div>
+
+  <!-- صفحه کامل ویرایش (مدل ۳) -->
+  <div class="full-ed" id="edView">
+    <div class="ed-top">
+      <div style="display:flex; gap:6px; align-items:center;">
+        <button class="btn-sub" onclick="stepEd(-1)">➡️ قبلی</button>
+        <b id="edPos" style="font-size:11px; color:#0f766e;">(1/1)</b>
+        <button class="btn-sub" onclick="stepEd(1)">بعدی ⬅️</button>
+      </div>
+      <button class="pill-btn lock-closed" style="padding:5px 12px;" onclick="closeEd()">برگشت ✕</button>
+    </div>
+    <div class="ed-body">
+      <div style="display:flex; gap:10px; align-items:center;">
+        <img id="edImg" src="" style="width:88px; height:88px; border-radius:14px; object-fit:cover; border:2px solid #0f766e;">
+        <div>
+          <b id="edTitle" style="font-size:13px;"></b>
+          <div id="edMeta" style="font-size:11px; color:#64748b; margin-top:3px;"></div>
+          <div id="edAdm" style="font-size:11px; color:#0284c7; margin-top:3px;"></div>
+        </div>
+      </div>
+      <div class="mode-3">
+        <button class="m3-b active" id="mbCnt" onclick="setEdM('cnt')">🔢 موجود با تعداد</button>
+        <button class="m3-b" id="mbUnm" onclick="setEdM('unm')">🟢 موجود (بدون عدد)</button>
+        <button class="m3-b" id="mbOos" onclick="setEdM('oos')">✖️ ناموجود (۰)</button>
+      </div>
+      <div id="edStepBox" style="display:flex; gap:6px; justify-content:center; align-items:center; background:#f8fafc; padding:8px; border-radius:10px;">
+        <button class="btn-sub" onclick="addSt(-1)">-1</button>
+        <input type="text" class="inp" id="edSt" style="width:80px; text-align:center; font-weight:bold; font-size:15px;" value="15">
+        <button class="btn-sub" onclick="addSt(1)">+1</button>
+        <button class="btn-sub" style="background:#ccfbf1; color:#0f766e;" onclick="addSt(5)">+5</button>
+        <button class="btn-sub" style="background:#ccfbf1; color:#0f766e;" onclick="addSt(10)">+10</button>
+      </div>
+      <div>
+        <span style="font-size:11px; font-weight:bold;">💰 قیمت فروش عادی (تومان):</span>
+        <input type="text" class="inp" id="edReg" style="font-size:14px; font-weight:bold; margin-top:3px;" oninput="onPriceChange()">
+        <div id="edWords" style="font-size:11px; color:#0f766e; font-weight:bold; margin-top:3px;"></div>
+      </div>
+      <div id="edWarn" style="display:none; background:#fef3c7; color:#b45309; padding:7px; border-radius:8px; font-size:11px; font-weight:bold;">
+        ⚠️ هشدار محافظ قیمت: قیمت جدید بیش از ۲ برابر تفاوت دارد! صفرها را چک کنید.
+      </div>
+      <div>
+        <span style="font-size:11px; font-weight:bold;">🏷️ قیمت فروش ویژه (اختیاری):</span>
+        <input type="text" class="inp" id="edSale" style="margin-top:3px;">
+      </div>
+      <div style="background:#f8fafc; padding:8px; border-radius:10px; border:1px solid #cbd5e1;">
+        <label style="font-size:11px; font-weight:bold; display:flex; gap:6px; align-items:center; margin-bottom:5px;">
+          <input type="checkbox" id="edNis"> 🚫 انتقال به تب «در فروشگاه موجود نیست»
+        </label>
+        <input type="text" class="inp" id="edReason" placeholder="علت اختیاری (مثلاً: شرکت پخش ندارد)">
+      </div>
+      <button class="btn-main" style="background:#16a34a; padding:11px; font-size:13px;" onclick="saveEd(false, true)">🟢 موجود کن و ذخیره کن</button>
+      <div style="display:flex; gap:6px; padding-bottom:40px;">
+        <button class="btn-main" style="flex:1; padding:10px;" onclick="saveEd(false, false)">💾 ذخیره همین وضعیت</button>
+        <button class="btn-main" style="flex:1; background:#2563eb; padding:10px;" onclick="saveEd(true, true)">⏭️ موجود کن و برو بعدی</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dlg-bg" id="dlgBg"><div class="dlg-box" id="dlgBox"></div></div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+  const defaultProds = [
+    {id:201, name:"شیر پرچرب کاله ۱ لیتری", sku:"6260101001", cat:"لبنیات", price:38000, sale:35500, stock:0, status:"outofstock", nis:false, reason:"", admin:"حبیب (مدیر کل)", time:"۱۴۰۳/۱۲/۰۷ - ساعت ۱۱:۳۰", ago:"🔥 امروز (۲ ساعت پیش)", img:"https://images.unsplash.com/photo-1563636619-e9143da7973b?w=200&q=80"},
+    {id:202, name:"برنج هاشمی درجه یک ۱۰ کیلویی", sku:"6260101002", cat:"برنج و غلات", price:1180000, sale:1120000, stock:0, status:"outofstock", nis:false, reason:"", admin:"علی (انباردار)", time:"۱۴۰۳/۱۲/۰۶ - ساعت ۱۸:۲۰", ago:"⏳ دیروز (۱۸ ساعت پیش)", img:"https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200&q=80"},
+    {id:203, name:"روغن مایع آفتابگردان لادن ۱.۸ لیتری", sku:"6260101003", cat:"روغن و رب", price:142000, sale:0, stock:0, status:"outofstock", nis:false, reason:"", admin:"حبیب (مدیر کل)", time:"۱۴۰۳/۱۲/۰۵ - ساعت ۱۴:۱۰", ago:"⏳ ۲ روز پیش", img:"https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=200&q=80"},
+    {id:204, name:"چای ارل گری احمد ۵۰۰ گرمی", sku:"6260101005", cat:"نوشیدنی", price:310000, sale:295000, stock:0, status:"outofstock", nis:true, reason:"شرکت پخش ندارد", admin:"حبیب (مدیر کل)", time:"۱۴۰۳/۱۲/۰۱ - ساعت ۱۹:۴۵", ago:"⏳ ۶ روز پیش", img:"https://images.unsplash.com/photo-1597481499750-3e6b22637e12?w=200&q=80"},
+    {id:205, name:"چیپس سرکه نمکی مزمز بزرگ", sku:"6260101006", cat:"تنقلات", price:45000, sale:0, stock:2, status:"instock", nis:false, reason:"", admin:"علی (انباردار)", time:"۱۴۰۳/۱۲/۰۷ - ساعت ۰۹:۱۵", ago:"🔥 امروز", img:"https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=200&q=80"},
+    {id:206, name:"رب گوجه‌فرنگی روژین ۸۰۰ گرمی", sku:"6260101009", cat:"روغن و رب", price:98000, sale:91500, stock:35, status:"instock", nis:false, reason:"", admin:"حبیب (مدیر کل)", time:"۱۴۰۳/۱۲/۰۴ - ساعت ۱۶:۰۰", ago:"۳ روز پیش", img:"https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=200&q=80"}
+  ];
+
+  let state = JSON.parse(localStorage.getItem('habib_state_v5') || 'null') || {
+    locked: false, mode: 'sandbox', currentAdmin: 'حبیب (مدیر کل)',
+    admins: ['حبیب (مدیر کل)', 'علی (انباردار)', 'رضا (مسئول قیمت)'],
+    siteUrl: 'https://habibshop.ir', ck: '', cs: '',
+    products: defaultProds,
+    logs: [
+      {id:101, pid:201, pname:"شیر پرچرب کاله ۱ لیتری", admin:"حبیب (مدیر کل)", time:"۱۴۰۳/۱۲/۰۷ - ساعت ۱۱:۳۰:۱۵", action:"✖️ ناموجود کردن کالا", oldSt:6, newSt:0, oldPr:38000, newPr:38000, oldNis:false, newNis:false},
+      {id:102, pid:201, pname:"شیر پرچرب کاله ۱ لیتری", admin:"رضا (مسئول قیمت)", time:"۱۴۰۳/۱۲/۰۴ - ساعت ۱۰:۱۲:۴۰", action:"✏️ ویرایش قیمت و موجودی", oldSt:15, newSt:6, oldPr:35000, newPr:38000, oldNis:false, newNis:false}
+    ]
+  };
+
+  let curTab = 'oos', curCat = 'همه', curNav = 0, returnNav = 0, edPid = null, edMode = 'cnt', filteredIds = [];
+
+  function saveState() { localStorage.setItem('habib_state_v5', JSON.stringify(state)); }
+  function faToEn(s) { return String(s||'').replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/,/g,'').trim(); }
+  function fmt(n) { return Number(faToEn(n)||0).toLocaleString('fa-IR'); }
+  function showToast(msg) { const t=document.getElementById('toast'); t.innerText=msg; t.style.display='block'; setTimeout(()=>t.style.display='none', 2600); }
+
+  function numToWords(val) {
+    let n = parseInt(faToEn(val), 10) || 0;
+    if (n <= 0) return "معادل: صفر تومان";
+    let m = Math.floor(n / 1000000), k = Math.floor((n % 1000000) / 1000), r = n % 1000, p = [];
+    if (m > 0) p.push(m + " میلیون");
+    if (k > 0) p.push(k + " هزار");
+    if (r > 0) p.push(r);
+    return "معادل: " + p.join(" و ") + " تومان";
+  }
+
+  function initHeader() {
+    const sel = document.getElementById('adminSel');
+    sel.innerHTML = state.admins.map(a => `<option value="${a}" ${a===state.currentAdmin?'selected':''}>👤 ${a}</option>`).join('');
+    const lSel = document.getElementById('logAdmSel');
+    lSel.innerHTML = `<option value="all">همه ادمین‌ها</option>` + state.admins.map(a => `<option value="${a}">👤 ${a}</option>`).join('');
+    document.getElementById('nbLog').innerText = `لاگ ادمین (${state.logs.length})`;
+    document.getElementById('sUrl').value = state.siteUrl || '';
+    document.getElementById('sCk').value = state.ck || '';
+    document.getElementById('sCs').value = state.cs || '';
+  }
+
+  function toggleLock() {
+    state.locked = !state.locked; saveState();
+    const b = document.getElementById('lockBtn');
+    b.className = 'pill-btn ' + (state.locked ? 'lock-closed' : 'lock-open');
+    b.innerText = state.locked ? '🔒 قفل' : '🔓 باز';
+    showToast(state.locked ? '🔒 قفل امنیت ویرایش فعال شد' : '🔓 قفل ویرایش باز شد');
+  }
+
+  function changeAdmin(v) { state.currentAdmin = v; saveState(); showToast('👤 ادمین فعال: ' + v); }
+  function addAdmin() {
+    const v = document.getElementById('newAdmInp').value.trim();
+    if (!v) return;
+    if (!state.admins.includes(v)) state.admins.push(v);
+    state.currentAdmin = v; document.getElementById('newAdmInp').value='';
+    saveState(); initHeader(); showToast('👤 ادمین جدید اضافه شد');
+  }
+
+  function setTab(t) { curTab = t; renderList(); }
+
+  function renderList() {
+    initHeader();
+    const oos = state.products.filter(p => !p.nis && (p.status==='outofstock' || p.stock<=0));
+    const nis = state.products.filter(p => p.nis);
+    const low = state.products.filter(p => !p.nis && p.status==='instock' && p.stock>0 && p.stock<=5);
+    const ins = state.products.filter(p => !p.nis && p.status==='instock' && p.stock>0);
+    const warn = state.products.filter(p => !p.img || p.price<=1000);
+
+    document.getElementById('c-oos').innerText = `(${oos.length})`;
+    document.getElementById('c-nis').innerText = `(${nis.length})`;
+    document.getElementById('c-low').innerText = `(${low.length})`;
+    document.getElementById('c-in').innerText = `(${ins.length})`;
+
+    ['oos','nis','low','in'].forEach(k => {
+      document.getElementById('t-'+k).className = 't-tab' + (curTab===k ? ' act-'+k : '');
+    });
+
+    const wb = document.getElementById('warnBox');
+    if (warn.length > 0) {
+      wb.style.display = 'flex';
+      document.getElementById('warnTxt').innerText = `⚠️ هشدار: ${warn.length} کالا بدون عکس یا بدون قیمت`;
+    } else wb.style.display = 'none';
+
+    let base = curTab==='oos'?oos : (curTab==='nis'?nis : (curTab==='low'?low : (curTab==='warn'?warn : ins)));
+    const cats = ['همه', ...new Set(state.products.map(x => x.cat || 'عمومی'))];
+    document.getElementById('catRow').innerHTML = cats.map(c => {
+      const cnt = c==='همه' ? base.length : base.filter(x => x.cat===c).length;
+      return `<div class="cat-pill ${curCat===c?'active':''}" onclick="curCat='${c}';renderList()">${c} (${cnt})</div>`;
+    }).join('');
+
+    if (curCat !== 'همه') base = base.filter(x => x.cat === curCat);
+    const q = document.getElementById('qInp').value.trim();
+    if (q) base = base.filter(x => x.name.includes(q) || String(x.sku).includes(q));
+
+    filteredIds = base.map(x => x.id);
+    const box = document.getElementById('cardsBox');
+    if (base.length === 0) {
+      box.innerHTML = `<div style="background:#dcfce7; color:#15803d; padding:24px; border-radius:15px; text-align:center; font-weight:bold; font-size:13px;">🎉 هیچ کالایی در این لیست نیست!</div>`;
+      return;
+    }
+
+    box.innerHTML = base.map(p => {
+      let bCls = p.nis ? 'b-nis' : (p.stock<=0 ? 'b-oos' : (p.stock<=5 ? 'b-low' : 'b-in'));
+      let bTxt = p.nis ? `🚫 موجود نیست (${p.reason||'بایگانی'})` : (p.stock<=0 ? 'ناموجود (۰)' : (p.stock<=5 ? `رو به اتمام (${p.stock})` : `موجود (${p.stock})`));
+      return `<div class="prod-card">
+        <img class="prod-thumb" src="${p.img||'https://via.placeholder.com/70?text=No+Img'}" onclick="openEd(${p.id}, 0)">
+        <div class="prod-info">
+          <div class="prod-name">${p.name}</div>
+          <div class="prod-meta">${p.cat} | کد: ${p.sku}</div>
+          <div><span class="st-badge ${bCls}">${bTxt}</span><span class="prod-price">${fmt(p.price)} ت</span></div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <button class="btn-main" onclick="openEd(${p.id}, 0)">✏️ ویرایش</button>
+          <button class="btn-sub" onclick="openInspect(${p.id})">🔍 بررسی</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function openInspect(pid) {
+    const p = state.products.find(x => x.id === pid);
+    if (!p) return;
+    const pLogs = state.logs.filter(l => l.pid === pid);
+    const lastLogHtml = pLogs.length > 0 ? `<div style="background:#f8fafc; padding:8px; border-radius:10px; border:1px solid #cbd5e1; font-size:11px;">
+      <div><b>👤 ${pLogs[0].admin}</b> | 🕒 ${pLogs[0].time}</div>
+      <div style="color:#0284c7; font-weight:bold; margin:2px 0;">${pLogs[0].action}</div>
+      <div>موجودی: ${pLogs[0].oldSt}⬅️${pLogs[0].newSt} | قیمت: ${fmt(pLogs[0].oldPr)}⬅️${fmt(pLogs[0].newPr)} ت</div>
+    </div>` : `<div style="font-size:11px; color:#94a3b8;">هنوز لاگی ثبت نشده است.</div>`;
+
+    const box = document.getElementById('dlgBox');
+    box.innerHTML = `
+      <b style="font-size:13px;">🔍 بررسی کالا: ${p.name}</b>
+      <div style="background:#fef2f2; border:1px solid #fca5a5; padding:9px; border-radius:10px; font-size:11px; line-height:1.7;">
+        <div style="color:#dc2626; font-weight:bold;">⏰ زمان تغییر/اتمام: ${p.ago||'امروز'}</div>
+        <div>📅 تاریخ و ساعت دقیق: ${p.time||'۱۴۰۳/۱۲/۰۷'}</div>
+        <div>👤 آخرین ادمین: <b>${p.admin}</b></div>
+      </div>
+      <b style="font-size:11px;">🕘 آخرین لاگ ثبت‌شده:</b>
+      ${lastLogHtml}
+      <button class="btn-sub" style="padding:7px;" onclick="openAllLogsModal(${pid})">📜 مشاهده لاگ‌های بیشتر (${pLogs.length} مورد به تاریخ و ساعت)</button>
+      <hr style="border:none; border-top:1px solid #e2e8f0;">
+      <input type="text" class="inp" id="insReason" value="${p.reason||''}" placeholder="علت اختیاری (مثلاً: شرکت پخش ندارد)">
+      <button class="btn-main" style="background:#475569; padding:8px;" onclick="toggleNisQuick(${pid})">
+        ${p.nis ? '♻️ بازگرداندن به لیست ناموجودها' : '🚫 انتقال به «در فروشگاه موجود نیست»'}
+      </button>
+      <div style="display:flex; gap:6px; margin-top:4px;">
+        <button class="btn-main" style="flex:1;" onclick="closeDlg();openEd(${pid},0)">✏️ صفحه کامل ویرایش</button>
+        <button class="btn-sub" onclick="closeDlg()">بستن</button>
+      </div>
+    `;
+    document.getElementById('dlgBg').classList.add('open');
+  }
+
+  function openAllLogsModal(pid) {
+    const p = state.products.find(x => x.id === pid);
+    const pLogs = state.logs.filter(l => l.pid === pid);
+    const listHtml = pLogs.map((l, idx) => `<div style="background:#f8fafc; padding:8px; border-radius:9px; border:1px solid #cbd5e1; font-size:11px;">
+      <div style="display:flex; justify-content:space-between;"><b>#${idx+1} 👤 ${l.admin}</b><span>📅 ${l.time}</span></div>
+      <div style="color:#0284c7; font-weight:bold;">${l.action}</div>
+      <div>🔢 موجودی: ${l.oldSt} ⬅️ ${l.newSt} | 💰 قیمت: ${fmt(l.oldPr)} ⬅️ ${fmt(l.newPr)} ت</div>
+    </div>`).join('') || 'بدون سابقه';
+
+    document.getElementById('dlgBox').innerHTML = `
+      <b style="font-size:13px;">📜 تمام آپدیت‌های «${p.name}»</b>
+      <div style="display:flex; flex-direction:column; gap:6px; max-height:280px; overflow-y:auto;">${listHtml}</div>
+      <button class="btn-main" onclick="openInspect(${pid})">🔙 بازگشت به بررسی کالا</button>
+    `;
+  }
+
+  function toggleNisQuick(pid) {
+    if (state.locked) { showToast('🔒 قفل ویرایش فعال است!'); return; }
+    const p = state.products.find(x => x.id === pid);
+    const r = document.getElementById('insReason').value.trim();
+    const oldNis = p.nis;
+    p.nis = !p.nis; p.reason = p.nis ? r : '';
+    state.logs.unshift({
+      id: Date.now(), pid: p.id, pname: p.name, admin: state.currentAdmin,
+      time: "۱۴۰۳/۱۲/۰۷ - ساعت " + new Date().toTimeString().slice(0,8),
+      action: p.nis ? "🚫 انتقال به در فروشگاه موجود نیست" : "♻️ بازگرداندن به ناموجودها",
+      oldSt: p.stock, newSt: p.stock, oldPr: p.price, newPr: p.price, oldNis: oldNis, newNis: p.nis
+    });
+    saveState(); closeDlg(); renderList();
+    showToast(p.nis ? '🚫 به تب «در فروشگاه موجود نیست» منتقل شد' : '♻️ به لیست ناموجودها برگشت');
+  }
+
+  function closeDlg() { document.getElementById('dlgBg').classList.remove('open'); }
+
+  function openEd(pid, fromNav) {
+    if (state.locked) { showToast('🔒 قفل امنیت ویرایش فعال است!'); return; }
+    const p = state.products.find(x => x.id === pid);
+    if (!p) return;
+    edPid = pid; returnNav = fromNav;
+    document.getElementById('bNav').style.display = 'none';
+    document.getElementById('edImg').src = p.img || '';
+    document.getElementById('edTitle').innerText = p.name;
+    document.getElementById('edMeta').innerText = `دسته: ${p.cat} | کد: ${p.sku}`;
+    document.getElementById('edAdm').innerText = `👤 ادمین فعال: ${state.currentAdmin}`;
+    document.getElementById('edSt').value = p.stock > 0 ? p.stock : 15;
+    document.getElementById('edReg').value = p.price;
+    document.getElementById('edSale').value = p.sale || '';
+    document.getElementById('edNis').checked = !!p.nis;
+    document.getElementById('edReason').value = p.reason || '';
+    setEdM(p.stock > 0 ? 'cnt' : 'oos');
+    onPriceChange();
+    const idx = filteredIds.indexOf(pid);
+    document.getElementById('edPos').innerText = `(${idx>=0?idx+1:1}/${Math.max(1,filteredIds.length)})`;
+    document.getElementById('edView').classList.add('open');
+  }
+
+  function closeEd() {
+    document.getElementById('edView').classList.remove('open');
+    document.getElementById('bNav').style.display = 'flex';
+    goNav(returnNav);
+  }
+
+  function stepEd(d) {
+    if (!filteredIds.length) return;
+    const i = (filteredIds.indexOf(edPid) + d + filteredIds.length) % filteredIds.length;
+    openEd(filteredIds[i], returnNav);
+  }
+
+  function setEdM(m) {
+    edMode = m;
+    document.getElementById('mbCnt').className = 'm3-b' + (m==='cnt'?' active':'');
+    document.getElementById('mbUnm').className = 'm3-b' + (m==='unm'?' active':'');
+    document.getElementById('mbOos').className = 'm3-b' + (m==='oos'?' active':'');
+    document.getElementById('edStepBox').style.display = m==='cnt' ? 'flex' : 'none';
+  }
+
+  function addSt(d) {
+    setEdM('cnt');
+    const inp = document.getElementById('edSt');
+    inp.value = Math.max(1, (parseInt(faToEn(inp.value),10)||0) + d);
+  }
+
+  function onPriceChange() {
+    const p = state.products.find(x => x.id === edPid);
+    const v = parseInt(faToEn(document.getElementById('edReg').value), 10) || 0;
+    document.getElementById('edWords').innerText = numToWords(v);
+    document.getElementById('edWarn').style.display = (p && p.price>0 && (v>=p.price*2 || (v>0 && v<=p.price*0.45))) ? 'block' : 'none';
+  }
+
+  function saveEd(goNext, forceIn) {
+    const p = state.products.find(x => x.id === edPid);
+    if (!p) return;
+    const oldSt = p.stock, oldPr = p.price, oldNis = p.nis;
+    const nisChecked = document.getElementById('edNis').checked;
+    let newSt = parseInt(faToEn(document.getElementById('edSt').value), 10) || 0;
+    if (forceIn) { newSt = Math.max(1, newSt || 15); p.status = 'instock'; p.nis = false; }
+    else if (nisChecked || edMode === 'oos') { newSt = 0; p.status = 'outofstock'; p.nis = nisChecked; }
+    else { p.status = 'instock'; p.nis = false; }
+
+    p.stock = newSt;
+    p.price = parseInt(faToEn(document.getElementById('edReg').value), 10) || 0;
+    p.sale = parseInt(faToEn(document.getElementById('edSale').value), 10) || 0;
+    p.reason = nisChecked ? document.getElementById('edReason').value.trim() : '';
+    p.admin = state.currentAdmin;
+    p.time = "۱۴۰۳/۱۲/۰۷ - ساعت " + new Date().toTimeString().slice(0,8);
+    p.ago = "🔥 همین الان";
+
+    state.logs.unshift({
+      id: Date.now(), pid: p.id, pname: p.name, admin: state.currentAdmin, time: p.time,
+      action: p.stock > 0 ? "🟢 موجود کردن / ویرایش" : "✏️ ویرایش کالا",
+      oldSt: oldSt, newSt: p.stock, oldPr: oldPr, newPr: p.price, oldNis: oldNis, newNis: p.nis
+    });
+    saveState();
+    showToast(`✔️ «${p.name}» ذخیره شد!`);
+    if (goNext && filteredIds.length > 1) { stepEd(1); return; }
+    closeEd();
+  }
+
+  function renderLogs() {
+    const f = document.getElementById('logAdmSel').value || 'all';
+    let list = state.logs;
+    if (f !== 'all') list = list.filter(x => x.admin === f);
+    document.getElementById('logsBox').innerHTML = list.map(l => `
+      <div class="filter-card" style="display:flex; flex-direction:column; gap:5px;">
+        <div style="display:flex; justify-content:space-between; font-size:11px;">
+          <b style="color:#0f766e;">👤 ${l.admin}</b><span style="color:#64748b;">🕒 ${l.time}</span>
+        </div>
+        <b style="font-size:12px;">🛍️ ${l.pname}</b>
+        <div style="font-size:11px; color:#0284c7; font-weight:bold;">${l.action}</div>
+        <div style="background:#f8fafc; padding:7px; border-radius:8px; font-size:11px;">
+          <div>🔢 موجودی: از ${l.oldSt} ⬅️ به ${l.newSt} عدد</div>
+          <div style="color:#15803d; font-weight:bold;">💰 قیمت: از ${fmt(l.oldPr)} ⬅️ به ${fmt(l.newPr)} تومان</div>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:4px;">
+          <button class="btn-sub" onclick="openEd(${l.pid}, 1)">✏️ ویرایش مجدد کالا</button>
+          <button class="btn-sub" style="color:#dc2626; border-color:#fca5a5;" onclick="askUndoStep1(${l.id})">↩️ برگرداندن به قبل (۲ مرحله‌ای)</button>
+        </div>
+      </div>
+    `).join('') || '<div style="text-align:center; padding:20px;">بدون لاگ</div>';
+  }
+
+  /* تایید ۲ مرحله‌ای برای برگرداندن تغییر (Undo) */
+  function askUndoStep1(lid) {
+    const l = state.logs.find(x => x.id === lid);
+    if (!l) return;
+    document.getElementById('dlgBox').innerHTML = `
+      <b style="color:#b45309; font-size:13px;">⚠️ سوال اول (مرحله ۱ از ۲): بازگرداندن تغییر</b>
+      <div style="font-size:12px; line-height:1.7;">آیا می‌خواهید تغییر ادمین <b>«${l.admin}»</b> روی کالای <b>«${l.pname}»</b> به حالت قبلی برگردد؟</div>
+      <button class="btn-main" style="background:#d97706; padding:9px;" onclick="askUndoStep2(${lid})">بله، ادامه به تایید نهایی (مرحله ۲)</button>
+      <button class="btn-sub" onclick="closeDlg()">خیر، انصراف</button>
+    `;
+    document.getElementById('dlgBg').classList.add('open');
+  }
+
+  function askUndoStep2(lid) {
+    const l = state.logs.find(x => x.id === lid);
+    document.getElementById('dlgBox').innerHTML = `
+      <b style="color:#dc2626; font-size:13px;">🚨 تایید نهایی (مرحله ۲ از ۲): مطمئن هستید؟</b>
+      <div style="background:#fef2f2; padding:9px; border-radius:9px; font-size:11px; line-height:1.8;">
+        <div>🔢 موجودی برمی‌گردد به: <b>${l.oldSt} عدد</b></div>
+        <div>💰 قیمت برمی‌گردد به: <b>${fmt(l.oldPr)} تومان</b></div>
+      </div>
+      <button class="btn-main" style="background:#dc2626; padding:9px;" onclick="execUndoFinal(${lid})">✔️ بله، ۱۰۰٪ مطمئنم، الان برگردان!</button>
+      <button class="btn-sub" onclick="closeDlg()">انصراف</button>
+    `;
+  }
+
+  function execUndoFinal(lid) {
+    const l = state.logs.find(x => x.id === lid);
+    const p = state.products.find(x => x.id === l.pid);
+    if (p) {
+      p.stock = l.oldSt; p.price = l.oldPr; p.nis = !!l.oldNis;
+      p.status = p.stock > 0 ? 'instock' : 'outofstock';
+      state.logs.unshift({
+        id: Date.now(), pid: p.id, pname: p.name, admin: state.currentAdmin,
+        time: "۱۴۰۳/۱۲/۰۷ - ساعت " + new Date().toTimeString().slice(0,8),
+        action: `↩️ واگرد دو مرحله‌ای (${l.admin})`, oldSt: l.newSt, newSt: l.oldSt, oldPr: l.newPr, newPr: l.oldPr
+      });
+      saveState();
+    }
+    closeDlg(); renderLogs(); showToast('↩️ به قیمت و موجودی قبلی بازگردانده شد!');
+  }
+
+  async function fetchStoreApi() {
+    let u = document.getElementById('sUrl').value.trim().replace(/\/$/,'');
+    if (!u.startsWith('http')) u = 'https://' + u;
+    state.siteUrl = u; saveState();
+    showToast('⏳ در حال استخراج کالاها و عکس‌ها از سایت حبیب...');
+    try {
+      const r = await fetch(u + '/wp-json/wc/store/v1/products?per_page=30');
+      const data = await r.json();
+      if (Array.isArray(data) && data.length > 0) {
+        state.products = data.map(x => ({
+          id: x.id, name: x.name, sku: x.sku || x.id,
+          cat: (x.categories && x.categories[0]) ? x.categories[0].name : 'سایت حبیب',
+          price: parseInt((x.prices && (x.prices.regular_price || x.prices.price)) || 0, 10),
+          sale: parseInt((x.prices && x.prices.sale_price) || 0, 10),
+          stock: x.is_in_stock ? 12 : 0, status: x.is_in_stock ? 'instock' : 'outofstock',
+          nis: false, reason: '', admin: state.currentAdmin, time: 'سایت حبیب', ago: 'بروز',
+          img: (x.images && x.images[0]) ? x.images[0].src : ''
+        }));
+        saveState(); goNav(0); showToast(`🎉 ${data.length} کالا و عکس از سایت حبیب دریافت شد!`);
+      }
+    } catch (e) { showToast('⚠️ برای اتصال مستقیم، کلیدهای ووکامرس را وارد کنید.'); }
+  }
+
+  function connectLiveWc() {
+    state.siteUrl = document.getElementById('sUrl').value.trim();
+    state.ck = document.getElementById('sCk').value.trim();
+    state.cs = document.getElementById('sCs').value.trim();
+    state.mode = 'live'; saveState();
+    document.getElementById('modeBtn').innerText = '🌐 سایت حبیب';
+    showToast('✔️ تنظیمات اتصال زنده ذخیره شد!');
+    fetchStoreApi();
+  }
+
+  function toggleMode() {
+    state.mode = state.mode === 'live' ? 'sandbox' : 'live'; saveState();
+    document.getElementById('modeBtn').innerText = state.mode === 'live' ? '🌐 سایت حبیب' : '🧪 آزمایشی';
+  }
+
+  function goNav(n) {
+    curNav = n;
+    document.getElementById('pInv').style.display = n===0 ? 'flex' : 'none';
+    document.getElementById('pLogs').style.display = n===1 ? 'flex' : 'none';
+    document.getElementById('pSet').style.display = n===2 ? 'flex' : 'none';
+    [0,1,2].forEach(i => document.getElementById('nb'+i).className = 'nav-btn' + (i===n?' active':''));
+    if (n===0) renderList();
+    if (n===1) renderLogs();
+  }
+
+  function handleAndroidBack() {
+    if (document.getElementById('dlgBg').classList.contains('open')) { closeDlg(); return true; }
+    if (document.getElementById('edView').classList.contains('open')) { closeEd(); return true; }
+    if (curNav !== 0) { goNav(0); return true; }
+    return false;
+  }
+
+  renderList();
+</script>
+</body>
+</html>
