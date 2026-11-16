@@ -16,43 +16,29 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Compile and Sign Native Android APK in 30 Seconds
+      - name: Compile and Sign Android APK
         run: |
           set -e
           BUILD_TOOLS=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -n 1)
           PLATFORM=$(ls -d $ANDROID_HOME/platforms/android-* | sort -V | tail -n 1)
           ANDROID_JAR="$PLATFORM/android.jar"
-          echo "Using Build-Tools: $BUILD_TOOLS"
-          echo "Using Platform: $ANDROID_JAR"
 
           mkdir -p src/ir/habibshop/inventory obj dex assets res/values output_apk
 
-          # دانلود فونت وزیرمتن داخل پوشه assets فایل APK
           curl -sL "https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/ttf/Vazirmatn-Regular.ttf" -o assets/Vazirmatn-Regular.ttf
           curl -sL "https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/ttf/Vazirmatn-Bold.ttf" -o assets/Vazirmatn-Bold.ttf
 
           cp MainActivity.java src/ir/habibshop/inventory/MainActivity.java
           cp app_index.html assets/index.html
 
-          cat << 'EOF' > res/values/strings.xml
-          <?xml version="1.0" encoding="utf-8"?>
-          <resources>
-              <string name="app_name">موجودی‌های سایت حبیب</string>
-          </resources>
-          EOF
+          printf '<?xml version="1.0" encoding="utf-8"?>
+<resources><string name="app_name">موجودی‌های سایت حبیب</string></resources>
+' > res/values/strings.xml
 
-          # ۱. کامپایل کد جاوا اندروید
           javac -encoding UTF-8 -source 1.8 -target 1.8 -bootclasspath "$ANDROID_JAR" -classpath "$ANDROID_JAR" -d obj src/ir/habibshop/inventory/MainActivity.java
-
-          # ۲. تبدیل به بایت‌کد اندروید (classes.dex)
           "$BUILD_TOOLS/d8" --lib "$ANDROID_JAR" --output dex obj/ir/habibshop/inventory/*.class
-
-          # ۳. بسته‌بندی منابع، مانیفست و فایل‌های اپلیکیشن
           "$BUILD_TOOLS/aapt" package -f -M AndroidManifest.xml -S res -A assets -I "$ANDROID_JAR" -F unaligned.apk
-          cp dex/classes.dex .
-          "$BUILD_TOOLS/aapt" add unaligned.apk classes.dex
-
-          # ۴. تراز کردن و امضای دیجیتال استاندارد اندروید (V1 + V2 + V3)
+          zip -j unaligned.apk dex/classes.dex
           "$BUILD_TOOLS/zipalign" -f 4 unaligned.apk aligned.apk
           keytool -genkeypair -v -keystore habib.keystore -alias habibkey -keyalg RSA -keysize 2048 -validity 10000 -storepass 123456 -keypass 123456 -dname "CN=HabibShop, OU=IT, O=Habib, L=Tehran, S=Tehran, C=IR"
           "$BUILD_TOOLS/apksigner" sign --ks habib.keystore --ks-pass pass:123456 --key-pass pass:123456 --out output_apk/HabibShop-Manager.apk aligned.apk
