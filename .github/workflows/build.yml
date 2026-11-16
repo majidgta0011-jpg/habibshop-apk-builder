@@ -1,0 +1,64 @@
+name: Build Mojoodi Habib Signed Android APK
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Flutter 3.24.3
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.3'
+          channel: 'stable'
+          cache: true
+
+      - name: Download Vazirmatn Persian Font into assets
+        run: |
+          mkdir -p assets
+          curl -L "https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/ttf/Vazirmatn-Regular.ttf" -o assets/Vazirmatn-Regular.ttf
+          curl -L "https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/ttf/Vazirmatn-Bold.ttf" -o assets/Vazirmatn-Bold.ttf
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build Signed Android APK with Flet
+        run: |
+          flet build apk --project "Mojoodi-Habib" --product "موجودی‌های سایت حبیب" --org "ir.habibshop.inventory" --build-version "4.0.0" --build-number 4 --yes
+
+      - name: Verify and Prepare Signed APK Output
+        run: |
+          mkdir -p output_apk
+          APK_PATH=$(find build/apk -name "*.apk" | head -n 1)
+          if [ -z "$APK_PATH" ]; then
+            echo "APK not found in build/apk!"
+            exit 1
+          fi
+          cp "$APK_PATH" output_apk/HabibShop-Manager.apk
+          ls -lh output_apk/HabibShop-Manager.apk
+
+      - name: Upload HabibShop-Manager APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: HabibShop-Manager-APK
+          path: output_apk/HabibShop-Manager.apk
+          if-no-files-found: error
