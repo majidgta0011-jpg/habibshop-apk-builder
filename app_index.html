@@ -5,16 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>موجودی‌های سایت حبیب</title>
 <style>
-  @font-face {
-    font-family: 'Vazirmatn';
-    src: url('Vazirmatn-Regular.ttf') format('truetype');
-    font-weight: normal;
-  }
-  @font-face {
-    font-family: 'Vazirmatn';
-    src: url('Vazirmatn-Bold.ttf') format('truetype');
-    font-weight: bold;
-  }
+  @font-face { font-family: 'Vazirmatn'; src: url('Vazirmatn-Regular.ttf') format('truetype'); font-weight: normal; }
+  @font-face { font-family: 'Vazirmatn'; src: url('Vazirmatn-Bold.ttf') format('truetype'); font-weight: bold; }
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
   html, body { width: 100%; height: 100%; background: #f1f5f9; color: #0f172a; overflow: hidden; }
   .app-shell { display: flex; flex-direction: column; width: 100%; height: 100%; max-width: 600px; margin: 0 auto; position: relative; }
@@ -81,7 +73,6 @@
     </div>
   </div>
 
-  <!-- تب ۱: کالاها -->
   <div class="main-body" id="pInv">
     <div class="top-4tabs">
       <div class="t-tab act-oos" id="t-oos" onclick="setTab('oos')">🚨 ناموجودها<br><span id="c-oos">(0)</span></div>
@@ -102,7 +93,6 @@
     <div class="cards-list" id="cardsBox"></div>
   </div>
 
-  <!-- تب ۲: لاگ ادمین‌ها -->
   <div class="main-body" id="pLogs" style="display:none;">
     <div class="filter-card" style="display:flex; gap:6px; align-items:center;">
       <span style="font-size:12px; font-weight:bold;">👤 فیلتر ادمین:</span>
@@ -111,7 +101,6 @@
     <div class="cards-list" id="logsBox"></div>
   </div>
 
-  <!-- تب ۳: تنظیمات سایت -->
   <div class="main-body" id="pSet" style="display:none;">
     <div class="filter-card" style="display:flex; flex-direction:column; gap:8px;">
       <b style="font-size:13px; color:#0f766e;">👤 افزودن نام ادمین جدید</b>
@@ -136,7 +125,6 @@
     <div class="nav-btn" id="nb2" onclick="goNav(2)"><span>⚙️</span><span>اتصال سایت</span></div>
   </div>
 
-  <!-- صفحه کامل ویرایش (مدل ۳) -->
   <div class="full-ed" id="edView">
     <div class="ed-top">
       <div style="display:flex; gap:6px; align-items:center;">
@@ -207,7 +195,7 @@
     {id:206, name:"رب گوجه‌فرنگی روژین ۸۰۰ گرمی", sku:"6260101009", cat:"روغن و رب", price:98000, sale:91500, stock:35, status:"instock", nis:false, reason:"", admin:"حبیب (مدیر کل)", time:"۱۴۰۳/۱۲/۰۴ - ساعت ۱۶:۰۰", ago:"۳ روز پیش", img:"https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=200&q=80"}
   ];
 
-  let state = JSON.parse(localStorage.getItem('habib_state_v5') || 'null') || {
+  let state = JSON.parse(localStorage.getItem('habib_apk_state_v1') || 'null') || {
     locked: false, mode: 'sandbox', currentAdmin: 'حبیب (مدیر کل)',
     admins: ['حبیب (مدیر کل)', 'علی (انباردار)', 'رضا (مسئول قیمت)'],
     siteUrl: 'https://habibshop.ir', ck: '', cs: '',
@@ -220,7 +208,7 @@
 
   let curTab = 'oos', curCat = 'همه', curNav = 0, returnNav = 0, edPid = null, edMode = 'cnt', filteredIds = [];
 
-  function saveState() { localStorage.setItem('habib_state_v5', JSON.stringify(state)); }
+  function saveState() { localStorage.setItem('habib_apk_state_v1', JSON.stringify(state)); }
   function faToEn(s) { return String(s||'').replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/,/g,'').trim(); }
   function fmt(n) { return Number(faToEn(n)||0).toLocaleString('fa-IR'); }
   function showToast(msg) { const t=document.getElementById('toast'); t.innerText=msg; t.style.display='block'; setTimeout(()=>t.style.display='none', 2600); }
@@ -236,10 +224,8 @@
   }
 
   function initHeader() {
-    const sel = document.getElementById('adminSel');
-    sel.innerHTML = state.admins.map(a => `<option value="${a}" ${a===state.currentAdmin?'selected':''}>👤 ${a}</option>`).join('');
-    const lSel = document.getElementById('logAdmSel');
-    lSel.innerHTML = `<option value="all">همه ادمین‌ها</option>` + state.admins.map(a => `<option value="${a}">👤 ${a}</option>`).join('');
+    document.getElementById('adminSel').innerHTML = state.admins.map(a => `<option value="${a}" ${a===state.currentAdmin?'selected':''}>👤 ${a}</option>`).join('');
+    document.getElementById('logAdmSel').innerHTML = `<option value="all">همه ادمین‌ها</option>` + state.admins.map(a => `<option value="${a}">👤 ${a}</option>`).join('');
     document.getElementById('nbLog').innerText = `لاگ ادمین (${state.logs.length})`;
     document.getElementById('sUrl').value = state.siteUrl || '';
     document.getElementById('sCk').value = state.ck || '';
@@ -334,8 +320,7 @@
       <div>موجودی: ${pLogs[0].oldSt}⬅️${pLogs[0].newSt} | قیمت: ${fmt(pLogs[0].oldPr)}⬅️${fmt(pLogs[0].newPr)} ت</div>
     </div>` : `<div style="font-size:11px; color:#94a3b8;">هنوز لاگی ثبت نشده است.</div>`;
 
-    const box = document.getElementById('dlgBox');
-    box.innerHTML = `
+    document.getElementById('dlgBox').innerHTML = `
       <b style="font-size:13px;">🔍 بررسی کالا: ${p.name}</b>
       <div style="background:#fef2f2; border:1px solid #fca5a5; padding:9px; border-radius:10px; font-size:11px; line-height:1.7;">
         <div style="color:#dc2626; font-weight:bold;">⏰ زمان تغییر/اتمام: ${p.ago||'امروز'}</div>
@@ -499,7 +484,6 @@
     `).join('') || '<div style="text-align:center; padding:20px;">بدون لاگ</div>';
   }
 
-  /* تایید ۲ مرحله‌ای برای برگرداندن تغییر (Undo) */
   function askUndoStep1(lid) {
     const l = state.logs.find(x => x.id === lid);
     if (!l) return;
@@ -561,7 +545,7 @@
         }));
         saveState(); goNav(0); showToast(`🎉 ${data.length} کالا و عکس از سایت حبیب دریافت شد!`);
       }
-    } catch (e) { showToast('⚠️ برای اتصال مستقیم، کلیدهای ووکامرس را وارد کنید.'); }
+    } catch (e) { showToast('⚠️ کلیدهای ووکامرس را بررسی کنید.'); }
   }
 
   function connectLiveWc() {
